@@ -1,8 +1,18 @@
 package com.example.whatsapp.Model;
 
 public class MessageModel {
-    String uId,message;
+    String uId,message,messageId;
     long timeStamp;
+
+
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
 
     public MessageModel(String uId, String message, long timeStamp) {
         this.uId = uId;

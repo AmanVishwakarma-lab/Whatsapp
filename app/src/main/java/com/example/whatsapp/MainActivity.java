@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         topAppBar.setOnMenuItemClickListener(item -> {
             int id= item.getItemId();
             if(id==R.id.settings){
-                return true;
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }else if(id==R.id.logout) {
                 AlertDialog alertDialog=new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("Logout");

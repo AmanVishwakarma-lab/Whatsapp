@@ -16,6 +16,7 @@ import com.example.whatsapp.Adapter.UserAdapter;
 import com.example.whatsapp.Model.Users;
 import com.example.whatsapp.R;
 import com.example.whatsapp.databinding.FragmentChatsBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,7 +54,10 @@ public class ChatsFragment extends Fragment {
                     if (users != null) {
                         users.setUserId(dataSnapshot.getKey());
                     }
-                    list.add(users);
+                    if(!users.getUserId().equals(FirebaseAuth.getInstance().getUid())){   //is if ke wajah se jis user ka account login hai uska naam list me show nahi hoga aur vo kudh ko msg nahi kar skata
+                        list.add(users);
+                    }
+
 
                 }
                 adapter.notifyDataSetChanged();
