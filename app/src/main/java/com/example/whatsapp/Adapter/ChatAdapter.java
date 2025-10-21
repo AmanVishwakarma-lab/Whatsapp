@@ -89,7 +89,8 @@ public class ChatAdapter extends RecyclerView.Adapter{
         });
 
         //for adding timeStamp with msg
-        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("hh:mm a");
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd MMM, hh:mm a");
+//        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("hh:mm a");
         String formattedTime = dateFormat.format(new java.util.Date(messageModel.getTimeStamp()));
 
         if(holder.getClass()==SenderViewHolder.class) {
