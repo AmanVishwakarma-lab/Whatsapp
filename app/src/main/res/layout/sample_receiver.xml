@@ -33,10 +33,10 @@
         android:layout_marginRight="3dp"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="13dp"
+        android:paddingStart="25dp"
         android:text="12:00"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline

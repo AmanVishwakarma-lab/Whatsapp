@@ -4,13 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.whatsapp.Adapter.ChatAdapter;
@@ -31,17 +28,25 @@ public class ChatDetailActivity extends AppCompatActivity {
     ActivityChatDetailBinding binding;
     FirebaseDatabase db;
     FirebaseAuth auth;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatDetailBinding.inflate(getLayoutInflater());
-        EdgeToEdge.enable(this);
+
+        // --- CONFLICTING CODE REMOVED ---
+        // EdgeToEdge.enable(this); // REMOVED: Conflicts with adjustResize
         setContentView(binding.getRoot());
+        /*
+        // REMOVED: This block manually sets padding and is no longer needed
+        // because we are relying on 'adjustResize' and 'fitsSystemWindows="true"'
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        */
+        // ---------------------------------
 
         db = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -67,68 +72,32 @@ public class ChatDetailActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.chatRecyclerView.setLayoutManager(layoutManager);
 
-
-//        db.getReference().child("chats")
-//                .child(senderRoom)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @SuppressLint("NotifyDataSetChanged")
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        messageModels.clear();
-//                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-//                            MessageModel model = snapshot1.getValue(MessageModel.class);
-//                            messageModels.add(model);
-//                        }
-//                        chatAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {}
-//                });
-//
-//        db.getReference().child("chats")
-//                .child(receiverRoom)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @SuppressLint("NotifyDataSetChanged")
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        messageModels.clear();
-//                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-//                            MessageModel model = snapshot1.getValue(MessageModel.class);
-//                            messageModels.add(model);
-//                        }
-//                        chatAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {}
-//                });
-
-
         String senderRoom = senderId+receiveId;
         String receiverRoom = receiveId+senderId;
 
         db.getReference().child("chats")
-                        .child(receiverRoom)
-                                .addValueEventListener(new ValueEventListener() {
-                                    @SuppressLint("NotifyDataSetChanged")
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        messageModels.clear();
-                                        for(DataSnapshot snapshot1:snapshot.getChildren()){
-                                            MessageModel model=snapshot1.getValue(MessageModel.class);
-                                            model.setMessageId(snapshot1.getKey());
-                                            messageModels.add(model);
+                .child(senderRoom)
+                .addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        messageModels.clear();
+                        for(DataSnapshot snapshot1:snapshot.getChildren()){
+                            MessageModel model=snapshot1.getValue(MessageModel.class);
+                            model.setMessageId(snapshot1.getKey());
+                            messageModels.add(model);
 
-                                        }
-                                        chatAdapter.notifyDataSetChanged();
-                                    }
+                        }
+                        chatAdapter.notifyDataSetChanged();
+                        binding.chatRecyclerView.scrollToPosition(messageModels.size() - 1);
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
 
-                                    }
-                                });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
 
@@ -137,6 +106,10 @@ public class ChatDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //what msg written by user to send is stored in msg variable
                 String msg = binding.msgWrite.getText().toString();
+                if (msg.trim().isEmpty()) {
+                    Toast.makeText(ChatDetailActivity.this, "Empty Message can't send", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 final MessageModel model = new MessageModel(senderId, msg);
                 model.setTimeStamp(new Date().getTime());
                 binding.msgWrite.setText(""); //when msg send the place of writing msg must be clean for write another msg

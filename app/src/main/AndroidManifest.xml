@@ -19,9 +19,11 @@
             android:exported="false" />
         <activity
             android:name=".GroupChatActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".ChatDetailActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".SignInActivity"
