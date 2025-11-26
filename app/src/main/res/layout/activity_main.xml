@@ -19,7 +19,7 @@
             app:title="Whatsapp"
             app:titleTextColor="@android:color/black"
             app:menu="@menu/menu"
-            android:background="#C8C4C4"/>
+            android:background="#50ED54"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -27,7 +27,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#09620D"
+        android:background="#106F14"
         android:elevation="12dp"
         app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white"
